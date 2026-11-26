@@ -1,0 +1,91 @@
+---
+// Efectos continuos ligados al scroll (solo los estables; las entradas de
+// secciones están en Motion.astro como transiciones CSS):
+//  - #scroll-progress     barra de avance de lectura.
+//  - [data-parallax-bg]   foto de fondo de los encabezados de página, más lenta.
+//  - [data-hero-scroll]   banner de inicio: el video se acerca y el texto se aleja.
+// Usa solo transform/opacity (GPU), un único requestAnimationFrame por scroll,
+// y no hace nada con prefers-reduced-motion.
+---
+
+<style is:global>
+  #scroll-progress {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 3px;
+    z-index: 90;
+    background: #4ab9cf;
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #scroll-progress {
+      display: none;
+    }
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    if (window.__pcScroll) return;
+    window.__pcScroll = true;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+    let bgs = [];
+    let hero = null;
+    let ticking = false;
+
+    const bar = () => {
+      let b = document.getElementById('scroll-progress');
+      if (!b) {
+        b = document.createElement('div');
+        b.id = 'scroll-progress';
+        b.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(b);
+      }
+      return b;
+    };
+
+    const frame = () => {
+      ticking = false;
+      const vh = innerHeight;
+      const max = document.documentElement.scrollHeight - vh;
+      bar().style.transform = `scaleX(${clamp(scrollY / Math.max(1, max))})`;
+
+      bgs.forEach((bg) => {
+        const r = bg.parentElement.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > vh) return;
+        bg.style.transform = `translate3d(0, ${Math.round(-r.top * 0.3)}px, 0) scale(1.12)`;
+      });
+
+      if (hero) {
+        const r = hero.el.getBoundingClientRect();
+        if (r.bottom < 0) return;
+        const p = clamp(-r.top / r.height);
+        if (hero.video) hero.video.style.transform = `scale(${1 + p * 0.15})`;
+        if (hero.content) {
+          hero.content.style.transform = `translate3d(0, ${Math.round(p * -100)}px, 0)`;
+          hero.content.style.opacity = String(clamp(1 - p * 1.4));
+        }
+      }
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(frame);
+    };
+
+    const init = () => {
+      bgs = [...document.querySelectorAll('[data-parallax-bg]')];
+      const el = document.querySelector('[data-hero-scroll]');
+      hero = el ? { el, video: el.querySelector('video'), content: el.querySelector('[data-hero-content]') } : null;
+      frame();
+    };
+
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', onScroll);
+    document.addEventListener('astro:page-load', init);
+  })();
+</script>

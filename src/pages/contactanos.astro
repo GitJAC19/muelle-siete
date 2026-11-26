@@ -1,0 +1,73 @@
+---
+import { Icon } from 'astro-icon/components';
+import Layout from '~/layouts/PageLayout.astro';
+import PageHero from '~/components/pc/PageHero.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import { PHOTOS, CONTACT, faqs } from '~/data/muestra';
+
+const metadata = {
+  title: 'Contáctanos',
+  description: 'Contacta a Muelle Siete Logística en Bogotá: teléfono, correo, horario y ubicación.',
+};
+const input = 'mt-1 w-full rounded-lg border border-slate-300 px-3 py-2.5 bg-white focus:border-cyan focus:ring-2 focus:ring-cyan/30 outline-none transition';
+const channels = [
+  ['tabler:phone', 'Llámanos', CONTACT.phone, `tel:${CONTACT.phone.replace(/\s/g, '')}`],
+  ['tabler:mail', 'Escríbenos', CONTACT.email, `mailto:${CONTACT.email}`],
+  ['tabler:clock', 'Horario', CONTACT.hours, null],
+  ['tabler:map-pin', 'Dirección', CONTACT.address, '#mapa'],
+];
+---
+
+<Layout metadata={metadata}>
+  <PageHero eyebrow="Contáctanos" title="Hablemos de tu operación." subtitle="Estamos para ayudarte." photo={PHOTOS.warehouse} />
+
+  <section class="bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 -mt-10 relative z-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        channels.map(([icon, t, v, href], i) => {
+          const Tag = href ? 'a' : 'div';
+          return (
+            <Tag href={href ?? undefined} data-reveal style={`--d:${i * 100}ms`} class="group rounded-2xl bg-white p-6 shadow-xl ring-1 ring-slate-200 hover:ring-cyan transition">
+              <span class="grid h-12 w-12 place-items-center rounded-xl bg-navy text-cyan group-hover:bg-cyan group-hover:text-navy transition"><Icon name={icon} class="w-6 h-6" /></span>
+              <h2 class="mt-4 font-bold text-navy">{t}</h2>
+              <p class="mt-1 text-sm text-muted break-words">{v}</p>
+            </Tag>
+          );
+        })
+      }
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20 grid gap-10 lg:grid-cols-2">
+      <div data-reveal="left" class="rounded-2xl bg-slate-50 p-6 sm:p-8 ring-1 ring-slate-200">
+        <form data-demo-form novalidate class="grid gap-5 sm:grid-cols-2">
+          <h2 class="font-heading sm:col-span-2 text-2xl font-extrabold text-navy">Envíanos tu mensaje</h2>
+          <label class="block text-sm font-medium">Nombre *<input name="nombre" required autocomplete="name" class={input} /></label>
+          <label class="block text-sm font-medium">Empresa<input name="empresa" autocomplete="organization" class={input} /></label>
+          <label class="block text-sm font-medium">Email *<input name="email" type="email" required autocomplete="email" class={input} /></label>
+          <label class="block text-sm font-medium">Teléfono<input name="telefono" type="tel" autocomplete="tel" class={input} /></label>
+          <label class="block text-sm font-medium sm:col-span-2">Mensaje *<textarea name="mensaje" rows="5" required class={input}></textarea></label>
+          <label class="sm:col-span-2 flex items-start gap-2 text-xs text-slate-500">
+            <input type="checkbox" name="habeas" required class="mt-0.5 accent-[#1f425d]" />
+            <span>He leído y acepto la <a href="/politica-de-privacidad" class="underline text-cyan-ink">Política de Privacidad</a> y autorizo el tratamiento de mis datos según la Ley 1581 de 2012.</span>
+          </label>
+          <button type="submit" class="sm:col-span-2 rounded-lg bg-navy px-6 py-4 font-bold text-white text-lg hover:bg-cyan hover:text-navy transition">Enviar mensaje</button>
+        </form>
+        <div data-form-ok tabindex="-1" role="status" class="hidden py-10 text-center outline-none">
+          <div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-cyan/15 text-cyan-ink text-3xl">✓</div>
+          <h3 class="font-heading mt-5 text-2xl font-extrabold text-navy">Mensaje enviado</h3>
+          <p class="mt-2 text-muted">Te responderemos lo antes posible.</p>
+        </div>
+      </div>
+      <div id="mapa" data-reveal="right" class="min-h-[420px] overflow-hidden rounded-2xl ring-1 ring-slate-200">
+        <iframe
+          title="Ubicación de Muelle Siete Logística en Google Maps"
+          src="https://maps.google.com/maps?q=Bogot%C3%A1&z=15&output=embed"
+          class="h-full min-h-[420px] w-full border-0"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <FAQs id="faqs" tagline="Preguntas frecuentes" title="Lo que nos preguntan" schema items={faqs} />
+</Layout>

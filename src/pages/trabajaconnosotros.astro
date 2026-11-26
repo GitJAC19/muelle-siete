@@ -1,0 +1,80 @@
+---
+import { Icon } from 'astro-icon/components';
+import Layout from '~/layouts/PageLayout.astro';
+import PageHero from '~/components/pc/PageHero.astro';
+import Eyebrow from '~/components/pc/Eyebrow.astro';
+import { PHOTOS } from '~/data/muestra';
+
+const metadata = {
+  title: 'Trabaja con nosotros',
+  description: 'Envía tu hoja de vida a Muelle Siete Logística. Buscamos auxiliares, operarios y coordinadores logísticos en Bogotá.',
+};
+const input = 'mt-1 w-full rounded-lg border border-slate-300 px-3 py-2.5 bg-white focus:border-cyan focus:ring-2 focus:ring-cyan/30 outline-none transition';
+const localidades = ['Usaquén', 'Chapinero', 'Santa Fe', 'San Cristóbal', 'Usme', 'Tunjuelito', 'Bosa', 'Kennedy', 'Fontibón', 'Engativá', 'Suba', 'Barrios Unidos', 'Teusaquillo', 'Los Mártires', 'Antonio Nariño', 'Puente Aranda', 'La Candelaria', 'Rafael Uribe Uribe', 'Ciudad Bolívar', 'Sumapaz', 'Fuera de Bogotá'];
+---
+
+<Layout metadata={metadata}>
+  <PageHero
+    eyebrow="Trabaja con nosotros"
+    title="Haz parte del equipo Muelle Siete."
+    subtitle="Adjunta tu hoja de vida y te contactamos cuando haya una vacante para tu perfil."
+    photo={PHOTOS.forklift}
+  />
+
+  <section class="bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20 grid gap-12 lg:grid-cols-5">
+      <div data-reveal="left" class="lg:col-span-2">
+        <Eyebrow>Por qué trabajar aquí</Eyebrow>
+        <h2 class="font-heading mt-4 text-3xl md:text-4xl font-extrabold text-navy">Más de 150 personas ya operan con nosotros.</h2>
+        <ul class="mt-8 space-y-5">
+          {
+            [
+              ['tabler:certificate', 'Contratación formal', 'Vinculación con todas las prestaciones de ley.'],
+              ['tabler:school', 'Formación continua', 'Inducción y entrenamiento en procesos logísticos.'],
+              ['tabler:trending-up', 'Crecimiento', 'Posibilidad de crecer a cargos de coordinación.'],
+            ].map(([icon, t, d]) => (
+              <li class="flex gap-4">
+                <span class="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-navy text-cyan"><Icon name={icon} class="w-6 h-6" /></span>
+                <div><h3 class="font-bold text-navy">{t}</h3><p class="text-sm text-muted">{d}</p></div>
+              </li>
+            ))
+          }
+        </ul>
+        {/* PENDIENTE: validar beneficios con gestión humana. */}
+      </div>
+
+      <div data-reveal="right" class="lg:col-span-3 rounded-2xl bg-white p-6 sm:p-8 shadow-xl ring-1 ring-slate-200">
+        <form data-demo-form novalidate class="grid gap-5 sm:grid-cols-2">
+          <h2 class="font-heading sm:col-span-2 text-2xl font-extrabold text-navy">Adjunta tu hoja de vida</h2>
+          <label class="block text-sm font-medium">Nombre *<input name="nombre" required autocomplete="given-name" class={input} /></label>
+          <label class="block text-sm font-medium">Apellidos *<input name="apellidos" required autocomplete="family-name" class={input} /></label>
+          <label class="block text-sm font-medium sm:col-span-2">Dirección de residencia *<input name="direccion" required autocomplete="street-address" class={input} /></label>
+          <label class="block text-sm font-medium">Ciudad *<input name="ciudad" required value="Bogotá" class={input} /></label>
+          <label class="block text-sm font-medium">Localidad *
+            <select name="localidad" required class={input}>
+              <option value="">Selecciona…</option>
+              {localidades.map((l) => <option>{l}</option>)}
+            </select>
+          </label>
+          <label class="block text-sm font-medium">Teléfono *<input name="telefono" type="tel" required autocomplete="tel" class={input} /></label>
+          <label class="block text-sm font-medium">Email *<input name="email" type="email" required autocomplete="email" class={input} /></label>
+          <label class="block text-sm font-medium sm:col-span-2">Hoja de vida (PDF, máx. 5 MB) *
+            <input name="archivo" type="file" accept="application/pdf,.pdf" required class="mt-1 block w-full text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-navy file:px-4 file:py-2.5 file:font-semibold file:text-white hover:file:bg-cyan hover:file:text-navy file:transition" />
+          </label>
+          <label class="sm:col-span-2 flex items-start gap-2 text-xs text-slate-500">
+            <input type="checkbox" name="habeas" required class="mt-0.5 accent-[#1f425d]" />
+            <span>He leído y acepto la <a href="/politica-de-privacidad" class="underline text-cyan-ink">Política de Privacidad</a> y autorizo el tratamiento de mis datos según la Ley 1581 de 2012.</span>
+          </label>
+          <button type="submit" class="sm:col-span-2 inline-flex items-center justify-center gap-2 rounded-lg bg-coral-ink px-6 py-4 font-bold text-white text-lg hover:bg-navy transition">
+            <Icon name="tabler:file-upload" class="w-5 h-5" /> Enviar hoja de vida
+          </button>
+        </form>
+        <div data-form-ok tabindex="-1" role="status" class="hidden py-10 text-center outline-none">
+          <div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-cyan/15 text-cyan-ink text-3xl">✓</div>
+          <h3 class="font-heading mt-5 text-2xl font-extrabold text-navy">Hoja de vida enviada</h3>
+          <p class="mt-2 text-muted">Revisaremos tu hoja de vida y te contactaremos.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

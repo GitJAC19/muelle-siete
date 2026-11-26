@@ -1,0 +1,18 @@
+---
+import { Icon } from 'astro-icon/components';
+import { CONTACT } from '~/data/muestra';
+---
+
+<div class="hidden md:block bg-navy-deep text-white/80 text-[13px]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-10">
+    <div class="flex items-center gap-6">
+      <span class="flex items-center gap-1.5"><Icon name="tabler:map-pin" class="w-4 h-4 text-cyan" />{CONTACT.address}</span>
+      <span class="flex items-center gap-1.5"><Icon name="tabler:clock" class="w-4 h-4 text-cyan" />{CONTACT.hours}</span>
+    </div>
+    <div class="flex items-center gap-6">
+      <a href={`tel:${CONTACT.phone.replace(/\s/g, '')}`} class="flex items-center gap-1.5 hover:text-cyan transition"><Icon name="tabler:phone" class="w-4 h-4 text-cyan" />{CONTACT.phone}</a>
+      <a href={`mailto:${CONTACT.email}`} class="flex items-center gap-1.5 hover:text-cyan transition"><Icon name="tabler:mail" class="w-4 h-4 text-cyan" />{CONTACT.email}</a>
+      <a href="/trabajaconnosotros" class="font-semibold text-coral hover:text-white transition">Adjunta tu hoja de vida</a>
+    </div>
+  </div>
+</div>

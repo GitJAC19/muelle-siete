@@ -1,0 +1,79 @@
+---
+import { Icon } from 'astro-icon/components';
+import Layout from '~/layouts/PageLayout.astro';
+import PageHero from '~/components/pc/PageHero.astro';
+import Eyebrow from '~/components/pc/Eyebrow.astro';
+import CtaBand from '~/components/pc/CtaBand.astro';
+import { img, PHOTOS } from '~/data/muestra';
+
+const metadata = {
+  title: 'Nuestra bodega en Bogotá',
+  description: 'Bodega de 2.000 m² climatizada en Bogotá para almacenaje, cross docking y co-packing.',
+};
+
+const specs = [
+  ['tabler:ruler-measure', '2.000 m²', 'Área de almacenaje'],
+  ['tabler:temperature', 'Climatizada', 'Aire acondicionado y calefacción'],
+  ['tabler:clock-24', '24/7', 'Operación logística'],
+  ['tabler:map-pin', 'Bogotá', 'Suba, con acceso a corredores de carga'],
+];
+const gallery = [PHOTOS.shelves, PHOTOS.forklift, PHOTOS.boxes, PHOTOS.warehouse, PHOTOS.packing, PHOTOS.trucks];
+---
+
+<Layout metadata={metadata}>
+  <PageHero
+    eyebrow="Nuestra bodega"
+    title="2.000 m² de almacenaje en Bogotá."
+    subtitle="Espacio climatizado y con calefacción, listo para tu mercancía."
+    photo={PHOTOS.shelves}
+  />
+
+  <section class="bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20">
+      <dl class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          specs.map(([icon, v, l], i) => (
+            <div data-reveal style={`--d:${i * 110}ms`} class="rounded-2xl border-t-4 border-cyan bg-slate-50 p-7">
+              <Icon name={icon} class="w-9 h-9 text-cyan-ink" />
+              <dt class="font-heading mt-4 text-3xl font-extrabold text-navy">{v}</dt>
+              <dd class="text-sm text-muted">{l}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="mt-20 grid gap-12 lg:grid-cols-2 items-center">
+        <div data-reveal="left">
+          <Eyebrow>Usos de la bodega</Eyebrow>
+          <h2 class="font-heading mt-4 text-4xl font-extrabold text-navy">Mucho más que guardar mercancía.</h2>
+          <ul class="mt-6 space-y-3">
+            {['Almacenaje y paletización', 'Cross docking', 'Packing y co-packing', 'Logística inversa y reprocesos', 'Control de inventario'].map((t) => (
+              <li class="flex items-center gap-3 text-lg text-navy"><Icon name="tabler:circle-check-filled" class="w-6 h-6 text-cyan" />{t}</li>
+            ))}
+          </ul>
+        </div>
+        <div data-reveal="right" class="zoom-img rounded-3xl">
+          <img src={img(PHOTOS.warehouse, 1000)} alt="Interior de bodega" class="h-[400px] w-full object-cover" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20">
+      <h2 data-reveal class="font-heading text-3xl md:text-4xl font-extrabold text-navy">Galería</h2>
+      <div class="gallery mt-10 grid gap-4 grid-cols-2 md:grid-cols-3">
+        {
+          gallery.map((p, i) => (
+            <div data-reveal="zoom" style={`--d:${(i % 3) * 120}ms`} class="zoom-img rounded-2xl">
+              <img src={img(p, 700)} alt="" class="h-48 md:h-64 w-full object-cover" loading="lazy" />
+            </div>
+          ))
+        }
+      </div>
+      {/* PENDIENTE: reemplazar por fotos reales de la bodega. */}
+    </div>
+  </section>
+
+  <CtaBand title="¿Necesitas espacio para tu mercancía?" text="Cuéntanos volumen y tiempo de almacenaje." />
+</Layout>

@@ -1,0 +1,26 @@
+---
+// Cabecera interior: miga de pan + título sobre foto con velo azul marino.
+import { img } from '~/data/muestra';
+
+export interface Props {
+  eyebrow: string;
+  title: string;
+  subtitle?: string;
+  photo: string;
+}
+const { eyebrow, title, subtitle, photo } = Astro.props;
+---
+
+<section class="relative overflow-hidden bg-navy text-white">
+  <img data-parallax-bg src={img(photo, 1800)} alt="" class="absolute inset-0 h-full w-full object-cover opacity-25" />
+  <div class="absolute inset-0 bg-gradient-to-r from-navy via-navy/90 to-navy/40"></div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-24">
+    <nav aria-label="Ruta" class="text-sm text-white/70">
+      <a href="/" class="hover:text-cyan">Inicio</a> <span class="mx-1.5">/</span>
+      <span class="text-cyan">{eyebrow}</span>
+    </nav>
+    <h1 class="font-heading mt-4 max-w-3xl text-4xl md:text-6xl font-extrabold leading-[1.05] tracking-tight">{title}</h1>
+    {subtitle && <p class="mt-5 max-w-2xl text-lg text-white/80">{subtitle}</p>}
+  </div>
+  <div class="relative h-1.5 bg-gradient-to-r from-cyan via-brand-blue to-coral"></div>
+</section>

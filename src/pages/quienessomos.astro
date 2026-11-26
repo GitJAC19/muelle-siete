@@ -1,0 +1,96 @@
+---
+import { Icon } from 'astro-icon/components';
+import Layout from '~/layouts/PageLayout.astro';
+import PageHero from '~/components/pc/PageHero.astro';
+import Eyebrow from '~/components/pc/Eyebrow.astro';
+import CtaBand from '~/components/pc/CtaBand.astro';
+import { img, PHOTOS, steps } from '~/data/muestra';
+
+const metadata = {
+  title: 'Quiénes somos',
+  description: 'Muelle Siete Logística S.A.S.: outsourcing especializado en procesos logísticos para medianas y grandes empresas en Bogotá.',
+};
+---
+
+<Layout metadata={metadata}>
+  <PageHero
+    eyebrow="Quiénes somos"
+    title="¿Quiénes somos?"
+    subtitle="Una compañía de outsourcing especializada en procesos logísticos."
+    photo={PHOTOS.team}
+  />
+
+  <section class="bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20 md:py-28 grid gap-12 lg:grid-cols-2 items-center">
+      <div data-reveal="left">
+        <Eyebrow>Nosotros</Eyebrow>
+        <h2 class="font-heading mt-4 text-4xl md:text-5xl font-extrabold leading-[1.05] text-navy">
+          Adaptabilidad al negocio, equilibrio entre confianza y cumplimiento.
+        </h2>
+        <p class="mt-6 text-lg text-muted">
+          Muelle Siete Logística S.A.S. optimiza la operación logística de sus clientes con altos estándares de calidad.
+          Trabajamos para ser la primera opción de las empresas que confían en nosotros, adaptándonos a las
+          necesidades de cada negocio.
+        </p>
+      </div>
+      <div data-reveal="right" class="zoom-img rounded-3xl">
+        <img src={img(PHOTOS.warehouse, 1000)} alt="Operación dentro de bodega" class="h-[420px] w-full object-cover" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Misión y visión -->
+  <section class="bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20 grid gap-6 md:grid-cols-2">
+      <article data-reveal="left" class="relative overflow-hidden rounded-3xl bg-navy p-10 text-white">
+        <Icon name="tabler:target-arrow" class="w-12 h-12 text-cyan" />
+        <h2 class="font-heading mt-6 text-3xl font-extrabold">Misión</h2>
+        <p class="mt-4 text-white/85 text-lg">
+          Brindar soluciones totales para la administración de las operaciones logísticas de medianas y grandes
+          empresas que necesitan enfocarse en su negocio principal, con buenas prácticas, apego al marco legal y de
+          la industria, agilidad operativa y talento humano competitivo que genere confianza y seguridad.
+        </p>
+        <div class="absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-cyan/15" aria-hidden="true"></div>
+      </article>
+      <article data-reveal="right" style="--d:150ms" class="relative overflow-hidden rounded-3xl bg-white p-10 ring-1 ring-slate-200">
+        <Icon name="tabler:eye" class="w-12 h-12 text-coral" />
+        <h2 class="font-heading mt-6 text-3xl font-extrabold text-navy">Visión</h2>
+        <p class="mt-4 text-muted text-lg">
+          En un periodo no mayor a 5 años ser la mejor opción de nuestros clientes para sus necesidades logísticas,
+          con base en nuestros valores corporativos y aportando un “plus” de servicio a las exigencias actuales del
+          mercado.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Proceso de trabajo (antes era solo una imagen) -->
+  <section class="bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20 md:py-28">
+      <div class="max-w-2xl" data-reveal>
+        <Eyebrow>Nuestro proceso de trabajo</Eyebrow>
+        <h2 class="font-heading mt-4 text-4xl md:text-5xl font-extrabold leading-[1.05] text-navy">Así tomamos el control de tu bodega.</h2>
+      </div>
+      <ol class="mt-14 grid gap-10 md:grid-cols-4 relative">
+        <div class="hidden md:block absolute top-8 left-8 right-8 h-0.5 bg-gradient-to-r from-cyan via-brand-blue to-coral" aria-hidden="true"></div>
+        {
+          steps.map((s, i) => (
+            <li data-reveal style={`--d:${i * 150}ms`} class="relative">
+              <span class="relative grid h-16 w-16 place-items-center rounded-full bg-navy font-heading text-xl font-extrabold text-cyan ring-8 ring-white">{s.n}</span>
+              <h3 class="font-heading mt-6 text-xl font-bold text-navy">{s.title}</h3>
+              <p class="mt-2 text-muted">{s.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="mt-14 flex flex-wrap gap-4" data-reveal>
+        <a href="/equipo-de-trabajo" class="group inline-flex items-center gap-2 rounded-lg bg-navy px-6 py-4 font-bold text-white hover:bg-cyan hover:text-navy transition">
+          Conoce al equipo
+        </a>
+        <a href="/bodega" class="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-6 py-4 font-semibold text-navy hover:border-cyan transition">Nuestra bodega</a>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</Layout>

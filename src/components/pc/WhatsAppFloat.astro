@@ -1,0 +1,14 @@
+---
+import { Icon } from 'astro-icon/components';
+import { whatsappLink } from '~/navigation';
+---
+
+<a
+  href={whatsappLink('Hola Muelle Siete, quiero información.')}
+  target="_blank"
+  rel="noopener"
+  aria-label="Escríbenos por WhatsApp"
+  class="wa-float fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center rounded-full bg-[#25D366] text-white shadow-xl hover:scale-105 transition"
+>
+  <Icon name="tabler:brand-whatsapp" class="w-8 h-8" />
+</a>

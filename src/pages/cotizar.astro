@@ -1,0 +1,25 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import PageHero from '~/components/pc/PageHero.astro';
+import Cotizador from '~/components/widgets/Cotizador.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import Proof from '~/components/pc/Proof.astro';
+import { PHOTOS, faqs } from '~/data/muestra';
+
+const metadata = {
+  title: 'Cotiza tu operación logística',
+  description: 'Solicita una cotización de outsourcing logístico: picking, cross docking, co-packing, almacenaje y más.',
+};
+---
+
+<Layout metadata={metadata}>
+  <PageHero
+    eyebrow="Cotizar"
+    title="Cotiza tu operación logística."
+    subtitle="Sin compromiso: cuéntanos qué necesitas y te enviamos una propuesta."
+    photo={PHOTOS.trucks}
+  />
+  <Cotizador />
+  <Proof title="Lo que logran las empresas que tercerizan con nosotros" />
+  <FAQs id="faqs" tagline="Preguntas frecuentes" title="Antes de cotizar" schema items={faqs} />
+</Layout>

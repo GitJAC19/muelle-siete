@@ -1,0 +1,283 @@
+---
+// Movimiento del sitio, con un solo momento protagonista:
+// - La persiana de bodega que se levanta y descubre el video del banner (home).
+// - Transición suave entre páginas + barra de progreso al navegar.
+// - [data-reveal]: aparición sobria (fundido + 16px) de bloques al hacer scroll.
+//   [data-reveal="zoom"] para galerías. style="--d:120ms" escalona.
+// - [data-count]: contadores que suben al aparecer.
+// - [data-demo-form]: formularios del prototipo (validan y confirman).
+// - [data-video-toggle]: pausa/reanuda el video del banner (WCAG 2.2.2).
+// Todo respeta prefers-reduced-motion y el contenido es visible sin JavaScript.
+---
+
+<script is:inline>
+  document.documentElement.classList.add('motion');
+</script>
+
+<style is:global>
+  /* Imágenes recortadas a su contenedor; el zoom al pasar el cursor solo en la galería */
+  .zoom-img {
+    overflow: hidden;
+  }
+  .gallery .zoom-img img {
+    transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .gallery .zoom-img:hover img {
+    transform: scale(1.05);
+  }
+
+  /* Evita scroll horizontal mientras algo entra en pantalla */
+  main {
+    overflow-x: clip;
+  }
+
+  /* Foco visible y consistente para teclado */
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 3px solid #4ab9cf;
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -4rem;
+    z-index: 100;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    background: #1f425d;
+    color: #fff;
+    font-weight: 700;
+    transition: top 0.2s;
+  }
+  .skip-link:focus {
+    top: 1rem;
+  }
+
+  /* El botón flotante de WhatsApp no tapa el menú móvil abierto */
+  body.overflow-hidden .wa-float {
+    display: none;
+  }
+
+  /* Entradas al hacer scroll: cada bloque entra desde su lado.
+     data-reveal            → desde abajo
+     data-reveal="left"     → desde la izquierda
+     data-reveal="right"    → desde la derecha
+     data-reveal="zoom"     → crece levemente
+     Se repite cada vez que el bloque vuelve a entrar desde abajo. */
+  html.motion [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 40px, 0);
+    transition:
+      opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--d, 0ms);
+  }
+  html.motion [data-reveal='left'] {
+    transform: translate3d(-140px, 0, 0);
+  }
+  html.motion [data-reveal='right'] {
+    transform: translate3d(140px, 0, 0);
+  }
+  html.motion [data-reveal='zoom'] {
+    transform: scale(0.94);
+  }
+  html.motion [data-reveal].is-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Persiana de bodega: se enrolla hacia arriba y descubre el video */
+  .shutter {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    background: repeating-linear-gradient(to bottom, #2a5576 0 26px, #1f425d 26px 30px, #15304a 30px 32px);
+    animation: shutter-up 1.25s cubic-bezier(0.75, 0, 0.2, 1) 0.25s forwards;
+  }
+  .shutter::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 14px;
+    background: #4ab9cf;
+  }
+  @keyframes shutter-up {
+    to {
+      transform: translateY(-101%);
+    }
+  }
+
+  /* Texto del banner: entra cuando la persiana ya subió */
+  .hero-in > * {
+    animation: hero-rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: calc(1s + var(--i, 0) * 0.12s);
+  }
+  .hero-in > *:nth-child(2) { --i: 1; }
+  .hero-in > *:nth-child(3) { --i: 2; }
+  .hero-in > *:nth-child(4) { --i: 3; }
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+  }
+
+  /* Transición entre páginas */
+  ::view-transition-old(root) {
+    animation: vt-out 0.25s ease both;
+  }
+  ::view-transition-new(root) {
+    animation: vt-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  @keyframes vt-out {
+    to { opacity: 0; }
+  }
+  @keyframes vt-in {
+    from { opacity: 0; transform: translateY(12px); }
+  }
+
+  #nav-progress {
+    position: fixed;
+    inset: 0 auto auto 0;
+    height: 3px;
+    width: 0;
+    z-index: 100;
+    background: #4ab9cf;
+    opacity: 0;
+    transition: width 0.4s ease, opacity 0.3s ease;
+  }
+  #nav-progress.on { width: 75%; opacity: 1; transition: width 2s cubic-bezier(0.1, 0.6, 0.2, 1); }
+  #nav-progress.done { width: 100%; opacity: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.motion [data-reveal] { opacity: 1; transform: none; transition: none; }
+    .shutter { display: none; }
+    .hero-in > * { animation: none; }
+    ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    if (window.__pcMotion) return;
+    window.__pcMotion = true;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fmt = new Intl.NumberFormat('es-CO');
+
+    const countUp = (el) => {
+      if (el.dataset.counted) return;
+      el.dataset.counted = '1';
+      const target = Number(el.dataset.count);
+      const suffix = el.dataset.suffix || '';
+      if (reduce || !target) return (el.textContent = fmt.format(target) + suffix);
+      const start = performance.now();
+      const tick = (t) => {
+        const p = Math.min(1, (t - start) / 1600);
+        el.textContent = fmt.format(Math.round(target * (1 - Math.pow(1 - p, 3)))) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+
+    // Altura real del encabezado fijo, para que los menús internos fijos no queden debajo.
+    const setHeaderH = () => {
+      const h = document.querySelector('header')?.offsetHeight;
+      if (h) document.documentElement.style.setProperty('--header-h', `${h}px`);
+    };
+    addEventListener('resize', setHeaderH);
+
+    const init = () => {
+      setHeaderH();
+      const io = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => {
+            const el = e.target;
+            if (e.isIntersecting) {
+              el.classList.add('is-in');
+              if (el.dataset.count) countUp(el);
+              el.querySelectorAll('[data-count]').forEach(countUp);
+            } else if (e.boundingClientRect.top > 0 && el.hasAttribute('data-reveal')) {
+              // Salió por abajo (el usuario subió): se rearma para entrar de nuevo.
+              el.classList.remove('is-in');
+            }
+          }),
+        { threshold: 0, rootMargin: '0px 0px -10% 0px' }
+      );
+      document.querySelectorAll('[data-reveal], [data-count]').forEach((el) => io.observe(el));
+
+      // Pausa del video del banner; si el usuario prefiere menos movimiento, arranca en pausa.
+      document.querySelectorAll('[data-video-toggle]').forEach((btn) => {
+        const video = document.getElementById(btn.dataset.videoToggle);
+        if (!video || btn.dataset.bound) return;
+        btn.dataset.bound = '1';
+        const sync = () => {
+          const paused = video.paused;
+          btn.setAttribute('aria-pressed', String(paused));
+          btn.querySelector('[data-label]').textContent = paused ? 'Reproducir video' : 'Pausar video';
+          btn.querySelector('[data-icon-pause]').classList.toggle('hidden', paused);
+          btn.querySelector('[data-icon-play]').classList.toggle('hidden', !paused);
+        };
+        if (reduce) video.pause();
+        video.addEventListener('play', sync);
+        video.addEventListener('pause', sync);
+        btn.addEventListener('click', () => (video.paused ? video.play() : video.pause()));
+        sync();
+      });
+
+      // Formularios del prototipo: validan en el navegador y muestran confirmación.
+      document.querySelectorAll('form[data-demo-form]').forEach((form) => {
+        if (form.dataset.bound) return;
+        form.dataset.bound = '1';
+        form.addEventListener('submit', (ev) => {
+          ev.preventDefault();
+          const file = form.querySelector('input[type=file]');
+          if (file) file.setCustomValidity(file.files[0] && file.files[0].size > 5 * 1024 * 1024 ? 'El archivo pesa más de 5 MB. Sube un PDF más liviano.' : '');
+          const group = form.querySelector('[data-required-group]');
+          const groupError = form.querySelector('[data-group-error]');
+          if (group) {
+            const any = group.querySelector('input:checked');
+            groupError?.classList.toggle('hidden', !!any);
+            if (!any) {
+              group.querySelector('input')?.focus();
+              return;
+            }
+          }
+          if (!form.reportValidity()) return;
+          const ok = form.parentElement.querySelector('[data-form-ok]');
+          form.classList.add('hidden');
+          ok?.classList.remove('hidden');
+          ok?.focus();
+        });
+      });
+    };
+
+    const getBar = () => {
+      let b = document.getElementById('nav-progress');
+      if (!b) {
+        b = document.createElement('div');
+        b.id = 'nav-progress';
+        b.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(b);
+      }
+      return b;
+    };
+    document.addEventListener('astro:before-preparation', () => {
+      const bar = getBar();
+      bar.classList.remove('done');
+      bar.classList.add('on');
+    });
+    document.addEventListener('astro:after-swap', () => getBar().classList.add('on'));
+    document.addEventListener('astro:page-load', () => {
+      const bar = getBar();
+      if (bar.classList.contains('on')) {
+        bar.classList.replace('on', 'done');
+        setTimeout(() => bar.classList.remove('done'), 400);
+      }
+      init();
+    });
+  })();
+</script>

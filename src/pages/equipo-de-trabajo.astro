@@ -1,0 +1,74 @@
+---
+import { Icon } from 'astro-icon/components';
+import Layout from '~/layouts/PageLayout.astro';
+import PageHero from '~/components/pc/PageHero.astro';
+import Eyebrow from '~/components/pc/Eyebrow.astro';
+import CtaBand from '~/components/pc/CtaBand.astro';
+import { img, PHOTOS } from '~/data/muestra';
+
+const metadata = {
+  title: 'Equipo de trabajo',
+  description: 'El equipo de Muelle Siete Logística: personal capacitado y comprometido con altos estándares de calidad en logística.',
+};
+
+const roles = [
+  ['tabler:user-star', 'Dirección y gerencia', 'Acompañamiento comercial y seguimiento a cada cuenta.'],
+  ['tabler:clipboard-check', 'Coordinadores de operación', 'Supervisión en sitio, turnos y control de indicadores.'],
+  ['tabler:forklift', 'Operarios y auxiliares', 'Cargue, alistamiento, empaque y distribución.'],
+  ['tabler:file-certificate', 'Gestión humana', 'Selección, contratación, inducción y bienestar del personal.'],
+];
+---
+
+<Layout metadata={metadata}>
+  <PageHero
+    eyebrow="Equipo de trabajo"
+    title="Un equipo altamente capacitado y comprometido."
+    subtitle="Expertos que se adaptan a las necesidades de tu negocio."
+    photo={PHOTOS.team}
+  />
+
+  <section class="bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20 md:py-28 grid gap-12 lg:grid-cols-2 items-center">
+      <div data-reveal="left">
+        <Eyebrow>Bienvenido a Muelle Siete</Eyebrow>
+        <h2 class="font-heading mt-4 text-4xl md:text-5xl font-extrabold leading-[1.05] text-navy">
+          Personas que hacen que la operación funcione.
+        </h2>
+        <p class="mt-6 text-lg text-muted">
+          Nuestro equipo está enfocado en altos estándares de calidad. Lo conforman expertos capaces de adaptarse
+          a las necesidades de cada negocio, manteniendo el equilibrio entre confianza y cumplimiento.
+        </p>
+        <p class="mt-4 text-lg text-muted">¿Quieres saber más? Escríbenos y te contamos cómo trabajamos.</p>
+      </div>
+      <div data-reveal="right" class="relative">
+        <div class="zoom-img rounded-3xl">
+          <img src={img(PHOTOS.boxes, 1000)} alt="Personal de Muelle Siete en operación" class="h-[420px] w-full object-cover" loading="lazy" />
+        </div>
+        <div class="absolute -bottom-6 -left-4 rounded-2xl bg-navy px-6 py-5 text-white shadow-xl">
+          <p class="font-heading text-3xl font-extrabold text-cyan" data-count="150">150</p>
+          <p class="text-sm">personas contratadas</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20">
+      <h2 data-reveal class="font-heading text-3xl md:text-4xl font-extrabold text-navy">Cómo está organizado el equipo</h2>
+      <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          roles.map(([icon, t, d], i) => (
+            <div data-reveal style={`--d:${i * 120}ms`} class="rounded-2xl bg-white p-7 ring-1 ring-slate-200 hover:ring-cyan transition">
+              <Icon name={icon} class="w-10 h-10 text-cyan" />
+              <h3 class="font-heading mt-5 text-lg font-bold text-navy">{t}</h3>
+              <p class="mt-2 text-sm text-muted">{d}</p>
+            </div>
+          ))
+        }
+      </div>
+      {/* PENDIENTE: reemplazar por fotos y cargos reales del equipo. */}
+    </div>
+  </section>
+
+  <CtaBand title="¿Quieres hacer parte del equipo?" text="Envíanos tu hoja de vida desde la sección Trabaja con nosotros." />
+</Layout>

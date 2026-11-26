@@ -1,0 +1,69 @@
+---
+import { Icon } from 'astro-icon/components';
+import Layout from '~/layouts/PageLayout.astro';
+import PageHero from '~/components/pc/PageHero.astro';
+import Eyebrow from '~/components/pc/Eyebrow.astro';
+import CtaBand from '~/components/pc/CtaBand.astro';
+import { img, PHOTOS, serviceGroups } from '~/data/muestra';
+
+const metadata = {
+  title: 'Servicios logísticos: picking, cross docking, co-packing y operación de bodega',
+  description: 'Doce servicios de outsourcing logístico en Bogotá: cargue y descargue, picking, packing y co-packing, cross docking, logística inversa, almacenaje y más.',
+};
+---
+
+<Layout metadata={metadata}>
+  <PageHero
+    eyebrow="Servicios"
+    title="Servicios logísticos para cada etapa de tu operación."
+    subtitle="Doce servicios agrupados en cuatro frentes. Los combinamos según lo que tu bodega necesite."
+    photo={PHOTOS.containers}
+  />
+
+  <!-- Índice rápido -->
+  <nav aria-label="Frentes de servicio" class="sticky top-[var(--header-h,72px)] z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex gap-2 overflow-x-auto py-3 text-sm font-semibold">
+      {
+        serviceGroups.map((g) => (
+          <a href={`#${g.slug}`} class="shrink-0 rounded-full border border-slate-200 px-4 py-2 text-navy hover:border-cyan hover:bg-cyan/10 transition">
+            {g.title}
+          </a>
+        ))
+      }
+    </div>
+  </nav>
+
+  {
+    serviceGroups.map((g, i) => (
+      <section id={g.slug} class:list={['scroll-mt-40', i % 2 ? 'bg-slate-50' : 'bg-white']}>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20 grid gap-12 lg:grid-cols-2 items-center">
+          <div data-reveal={i % 2 ? 'right' : 'left'} class:list={['relative', i % 2 && 'lg:order-2']}>
+            <div class="zoom-img rounded-3xl">
+              <img src={img(g.photo, 1000)} alt={g.title} class="h-[380px] w-full object-cover" loading="lazy" />
+            </div>
+            <span class="absolute -top-5 -left-3 grid h-16 w-16 place-items-center rounded-2xl bg-navy text-cyan shadow-xl">
+              <Icon name={g.icon} class="w-8 h-8" />
+            </span>
+          </div>
+          <div data-reveal={i % 2 ? 'left' : 'right'}>
+            <h2 class="font-heading text-3xl md:text-4xl font-extrabold text-navy">{g.title}</h2>
+            <p class="mt-3 text-lg text-muted">{g.text}</p>
+            <div class="mt-8 space-y-4">
+              {g.services.map(([name, desc], j) => (
+                <div class="flex gap-4 rounded-xl bg-white p-5 ring-1 ring-slate-200 hover:ring-cyan transition">
+                  <Icon name="tabler:circle-check-filled" class="w-6 h-6 shrink-0 text-cyan" />
+                  <div>
+                    <h3 class="font-bold text-navy">{name}</h3>
+                    <p class="text-sm text-muted">{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <CtaBand title="¿Qué servicios necesita tu operación?" text="Arma tu cotización en menos de un minuto." />
+</Layout>

@@ -1,0 +1,271 @@
+---
+import { Icon } from 'astro-icon/components';
+import Layout from '~/layouts/PageLayout.astro';
+import StructuredData from '~/components/common/StructuredData.astro';
+import Eyebrow from '~/components/pc/Eyebrow.astro';
+import CtaBand from '~/components/pc/CtaBand.astro';
+import Proof from '~/components/pc/Proof.astro';
+import { SITE } from 'astrowind:config';
+import { img, PHOTOS, clients, serviceGroups, CONTACT } from '~/data/muestra';
+
+const metadata = {
+  title: 'Muelle Siete Logística — Outsourcing logístico y operación de bodega en Bogotá',
+  ignoreTitleTemplate: true,
+};
+
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    '@id': `${SITE?.site}/#organization`,
+    name: 'Muelle Siete Logística S.A.S.',
+    url: SITE?.site,
+    telephone: CONTACT.phone,
+    email: CONTACT.email,
+    address: { '@type': 'PostalAddress', streetAddress: 'Bogotá', addressLocality: 'Bogotá', addressCountry: 'CO' },
+    openingHours: ['Mo-Fr 08:00-17:00', 'Sa 08:00-13:00'],
+  },
+];
+
+// Video local en public/media (licencia libre de Pexels).
+const VIDEO = '/media/hero.mp4';
+
+const counters = [
+  { count: 12400, label: 'Servicios prestados' },
+  { count: 150, label: 'Personas contratadas' },
+  { count: 2000, suffix: ' m²', label: 'De bodega climatizada' },
+  { text: '24/7', label: 'Operación logística' },
+];
+---
+
+<Layout metadata={metadata}>
+  <StructuredData slot="head" schema={structuredData} />
+
+  <!-- BANNER CON VIDEO -->
+  <section data-hero-scroll class="relative isolate overflow-hidden bg-navy text-white min-h-[78vh] md:min-h-[86vh] flex items-center">
+    <div class="shutter" aria-hidden="true"></div>
+    <video
+      id="hero-video"
+      class="absolute inset-0 -z-10 h-full w-full object-cover"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster={img(PHOTOS.warehouse, 1600)}
+      aria-hidden="true"
+    >
+      <source src={VIDEO} type="video/mp4" />
+    </video>
+    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-navy via-navy/80 to-navy/20"></div>
+    <div class="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-navy/80 to-transparent"></div>
+
+    <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 py-20">
+      <div data-hero-content class="hero-in max-w-3xl">
+        <p class="inline-flex items-center gap-2 rounded-full border border-cyan/40 bg-navy/40 px-4 py-1.5 text-sm font-semibold text-cyan">
+          <span class="h-2 w-2 rounded-full bg-cyan"></span> Operación logística 24/7 en Bogotá
+        </p>
+        <h1 class="font-heading mt-6 text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-[1] tracking-tight">
+          Operamos tu bodega.<br />Tú vendes más.
+        </h1>
+        <p class="mt-6 max-w-xl text-lg md:text-xl text-white/85">
+          Somos un outsourcing logístico: personal entrenado, procesos y control para que tu mercancía entre, se
+          aliste y salga sin fricción.
+        </p>
+        <div class="mt-9 flex flex-col sm:flex-row gap-3">
+          <a href="/cotizar" class="group inline-flex items-center justify-center gap-2 rounded-lg bg-cyan px-7 py-4 font-bold text-lg text-navy hover:bg-white transition">
+            Cotizar operación
+          </a>
+          <a href="/servicios" class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/40 px-7 py-4 font-semibold hover:bg-white/10 transition">
+            Ver servicios
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      data-video-toggle="hero-video"
+      aria-pressed="false"
+      class="absolute bottom-20 md:bottom-24 right-4 sm:right-6 z-10 inline-flex items-center gap-2 rounded-full bg-navy/70 px-4 py-2 text-sm font-semibold text-white backdrop-blur hover:bg-navy transition"
+    >
+      <Icon data-icon-pause name="tabler:player-pause-filled" class="w-4 h-4" />
+      <Icon data-icon-play name="tabler:player-play-filled" class="w-4 h-4 hidden" />
+      <span data-label>Pausar video</span>
+    </button>
+  </section>
+
+  <!-- CIFRAS -->
+  <section id="cifras" class="relative bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 -mt-12 md:-mt-16 relative z-10">
+      <dl class="grid grid-cols-2 lg:grid-cols-4 overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-200">
+        {
+          counters.map((c, i) => (
+            <div data-reveal style={`--d:${i * 110}ms`} class="p-6 md:p-8 border-slate-200 [&:not(:last-child)]:border-r max-lg:[&:nth-child(2)]:border-r-0 max-lg:[&:nth-child(-n+2)]:border-b">
+              <dd class="font-heading text-3xl md:text-4xl font-extrabold text-navy" {...(c.count ? { 'data-count': c.count, 'data-suffix': c.suffix ?? '' } : {})}>
+                {c.text ?? `${c.count.toLocaleString('es-CO')}${c.suffix ?? ''}`}
+              </dd>
+              <dt class="mt-1 text-sm font-medium text-muted">{c.label}</dt>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- QUIÉNES SOMOS (resumen) -->
+  <section class="bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20 md:py-28 grid gap-12 lg:grid-cols-2 items-center">
+      <div data-reveal="left" class="relative">
+        <div class="zoom-img rounded-3xl">
+          <img src={img(PHOTOS.team, 1000)} alt="Equipo de operación logística en bodega" class="h-[420px] w-full object-cover rounded-3xl" loading="lazy" />
+        </div>
+        <div class="absolute -bottom-6 -right-4 md:-right-8 rounded-2xl bg-coral px-6 py-5 text-white shadow-xl">
+          <p class="font-heading text-3xl font-extrabold">+150</p>
+          <p class="text-sm">personas en operación</p>
+        </div>
+      </div>
+      <div data-reveal="right">
+        <Eyebrow>Quiénes somos</Eyebrow>
+        <h2 class="font-heading mt-4 text-4xl md:text-5xl font-extrabold leading-[1.05] text-navy">
+          Operación optimizada, con alta calidad.
+        </h2>
+        <p class="mt-5 text-lg text-muted">
+          Muelle Siete Logística S.A.S. es una compañía de outsourcing especializada en procesos logísticos.
+          Optimizamos la operación de medianas y grandes empresas con adaptabilidad al negocio y equilibrio entre
+          confianza y cumplimiento.
+        </p>
+        <ul class="mt-6 grid sm:grid-cols-2 gap-3">
+          {['Personal entrenado y supervisado', 'Marco legal y de industria', 'Agilidad operativa', 'Indicadores medibles'].map((t) => (
+            <li class="flex items-center gap-2 font-medium text-navy"><Icon name="tabler:circle-check-filled" class="w-5 h-5 text-cyan" />{t}</li>
+          ))}
+        </ul>
+        <a href="/quienessomos" class="group mt-8 inline-flex items-center gap-2 font-bold text-cyan-ink hover:text-navy">
+          Conoce más de nosotros
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS (resumen) -->
+  <section class="bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20 md:py-28">
+      <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div class="max-w-2xl">
+          <Eyebrow>Servicios</Eyebrow>
+          <h2 class="font-heading mt-3 text-4xl md:text-5xl font-extrabold leading-[1.05] text-navy">
+            De la rampa de cargue hasta la devolución.
+          </h2>
+        </div>
+        <a href="/servicios" class="font-bold text-cyan-ink underline-offset-4 hover:underline">Ver los 12 servicios</a>
+      </div>
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          serviceGroups.map((g, i) => (
+            <a href={`/servicios#${g.slug}`} data-reveal style={`--d:${i * 120}ms`} class="group flex flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200 hover:ring-cyan transition">
+              <div class="h-44 overflow-hidden">
+                <img src={img(g.photo, 700)} alt="" class="h-full w-full object-cover transition duration-700 group-hover:scale-105" loading="lazy" />
+              </div>
+              <div class="flex flex-1 flex-col p-6">
+                <span class="-mt-12 mb-4 grid h-12 w-12 place-items-center rounded-xl bg-navy text-cyan ring-4 ring-white">
+                  <Icon name={g.icon} class="w-6 h-6" />
+                </span>
+                <h3 class="font-heading text-xl font-bold text-navy">{g.title}</h3>
+                <p class="mt-2 flex-1 text-sm text-muted">{g.text}</p>
+                <span class="mt-4 text-sm font-bold text-cyan-ink underline-offset-4 group-hover:underline">Ver detalle</span>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- CLIENTES -->
+  <section class="bg-white py-16 overflow-hidden">
+    <div data-reveal class="text-center">
+      <Eyebrow class="justify-center">Ellos han confiado en nosotros</Eyebrow>
+    </div>
+    <div class="marquee mt-8 [mask-image:linear-gradient(90deg,transparent,#000_10%,#000_90%,transparent)]">
+      <div class="marquee-track flex w-max gap-6">
+        {
+          [...clients, ...clients].map((c, i) => (
+            <span aria-hidden={i >= clients.length ? 'true' : undefined} class="rounded-xl border border-slate-200 px-8 py-5 font-heading text-xl md:text-2xl font-extrabold text-slate-600 whitespace-nowrap hover:text-navy hover:border-cyan transition">
+              {c}
+            </span>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFICIOS -->
+  <section class="relative overflow-hidden bg-navy text-white">
+    <div class="absolute inset-0 opacity-[0.06] [background-image:repeating-linear-gradient(135deg,#fff_0_2px,transparent_2px_24px)]" aria-hidden="true"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 md:py-28">
+      <div class="max-w-2xl" data-reveal>
+        <h2 class="font-heading text-4xl md:text-5xl font-extrabold leading-[1.05]">Lo que respalda cada operación.</h2>
+      </div>
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          [
+            ['tabler:truck-loading', 'Capacidad logística', 'Escalamos el equipo en temporada alta sin que contrates a nadie.'],
+            ['tabler:shield-check', 'Seguridad al 100 %', 'Procesos de inspección y control en cada cargue.'],
+            ['tabler:box-seam', 'Gestión de carga', 'Mercancía trazable desde que entra hasta que sale.'],
+            ['tabler:headset', 'Soporte al instante', 'Un coordinador dedicado atento a tu operación.'],
+          ].map(([icon, title, text], i) => (
+            <div data-reveal style={`--d:${i * 120}ms`} class="group rounded-2xl border border-white/10 bg-white/[0.04] p-7 hover:bg-white/[0.08] hover:border-cyan/50 transition">
+              <span class="grid h-14 w-14 place-items-center rounded-xl bg-cyan/15 text-cyan group-hover:bg-cyan group-hover:text-navy transition">
+                <Icon name={icon} class="w-7 h-7" />
+              </span>
+              <h3 class="font-heading mt-5 text-lg font-bold">{title}</h3>
+              <p class="mt-2 text-sm text-white/70">{text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- BODEGA (resumen) -->
+  <section class="bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20 md:py-28 grid gap-12 lg:grid-cols-2 items-center">
+      <div data-reveal="left">
+        <Eyebrow>Nuestra bodega</Eyebrow>
+        <h2 class="font-heading mt-4 text-4xl md:text-5xl font-extrabold leading-[1.05] text-navy">2.000 m² listos para tu mercancía.</h2>
+        <p class="mt-5 text-lg text-muted">Espacio climatizado y con calefacción en Bogotá para almacenaje, cross docking y procesos de valor agregado.</p>
+        <a href="/bodega" class="group mt-8 inline-flex items-center gap-2 rounded-lg bg-navy px-6 py-4 font-bold text-white hover:bg-cyan hover:text-navy transition">
+          Conoce la bodega
+        </a>
+      </div>
+      <div data-reveal="right" class="grid grid-cols-2 gap-4">
+        <div class="zoom-img col-span-2 rounded-3xl"><img src={img(PHOTOS.shelves, 900)} alt="Estanterías de bodega" class="h-60 w-full object-cover" loading="lazy" /></div>
+        <div class="zoom-img rounded-3xl"><img src={img(PHOTOS.forklift, 600)} alt="Montacargas moviendo estibas" class="h-40 w-full object-cover" loading="lazy" /></div>
+        <div class="zoom-img rounded-3xl"><img src={img(PHOTOS.boxes, 600)} alt="Cajas listas para despacho" class="h-40 w-full object-cover" loading="lazy" /></div>
+      </div>
+    </div>
+  </section>
+
+  <Proof showClients={false} />
+
+  <CtaBand />
+</Layout>
+
+<style>
+  .marquee-track {
+    animation: marquee 45s linear infinite;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+    }
+  }
+</style>

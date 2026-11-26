@@ -1,0 +1,89 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import PageHero from '~/components/pc/PageHero.astro';
+import { PHOTOS, CONTACT } from '~/data/muestra';
+
+const metadata = {
+  title: 'Política de privacidad',
+  description: 'Política de tratamiento de datos personales de Muelle Siete Logística S.A.S. (Ley 1581 de 2012).',
+};
+const toc = [
+  ['finalidades', 'Finalidades del tratamiento'],
+  ['compartir', 'Casos en los que se comparten datos'],
+  ['derechos', 'Derechos de los titulares'],
+  ['canales', 'Procedimiento y canales de atención'],
+  ['vigencia', 'Vigencia'],
+];
+---
+
+<Layout metadata={metadata}>
+  <PageHero eyebrow="Política de privacidad" title="Política de privacidad" subtitle="Cómo tratamos tus datos personales, según la Ley 1581 de 2012." photo={PHOTOS.shelves} />
+
+  <section class="bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16 grid gap-12 lg:grid-cols-[260px_1fr]">
+      <aside class="lg:sticky lg:top-28 self-start">
+        <p class="text-sm font-semibold text-navy">En esta página</p>
+        <ol class="mt-4 space-y-2 text-sm">
+          {toc.map(([id, t], i) => <li><a href={`#${id}`} class="text-navy hover:text-cyan-ink">{i + 1}. {t}</a></li>)}
+        </ol>
+      </aside>
+
+      <article data-reveal class="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-navy prose-a:text-cyan-ink prose-h2:scroll-mt-28">
+        {/* PENDIENTE: pegar el texto oficial aprobado por la empresa antes de publicar. */}
+        <p class="not-prose rounded-lg bg-slate-50 px-4 py-3 text-sm text-muted ring-1 ring-slate-200">
+          Resumen estructurado de la política publicada en el sitio actual.
+        </p>
+        <p>
+          En cumplimiento de la Ley 1581 de 2012 y sus decretos reglamentarios, <strong>Muelle Siete Logística S.A.S.</strong>{' '}
+          (marca ficticia para revisión de diseño), con domicilio en Bogotá D.C., teléfono {CONTACT.phone} y correo{' '}
+          <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>, adopta esta política para el tratamiento de los datos
+          personales de clientes, proveedores, trabajadores y terceros vinculados con su actividad.
+        </p>
+
+        <h2 id="finalidades">1. Finalidades del tratamiento</h2>
+        <ul>
+          <li>Cumplir contratos laborales, civiles y comerciales.</li>
+          <li>Procesos de selección y gestión del personal.</li>
+          <li>Nómina, seguridad social y prestaciones.</li>
+          <li>Atención de peticiones, quejas y reclamos.</li>
+          <li>Relación con clientes y proveedores.</li>
+          <li>Envío de información comercial, promocional y publicitaria de los servicios.</li>
+          <li>Cumplimiento de obligaciones legales y regulatorias.</li>
+          <li>Medidas de seguridad: biometría, videovigilancia y control de acceso.</li>
+        </ul>
+
+        <h2 id="compartir">2. Casos en los que se comparten datos</h2>
+        <ul>
+          <li>Con autoridades competentes cuando la ley lo exija.</li>
+          <li>Con proveedores de tecnología o redes sociales, previa autorización del titular.</li>
+          <li>Con encargados del tratamiento en Colombia o en el exterior cuando sea necesario para ejecutar contratos.</li>
+        </ul>
+
+        <h2 id="derechos">3. Derechos de los titulares</h2>
+        <ul>
+          <li>Conocer, actualizar y rectificar sus datos.</li>
+          <li>Solicitar prueba de la autorización otorgada.</li>
+          <li>Ser informado sobre el uso dado a sus datos.</li>
+          <li>Presentar quejas ante la Superintendencia de Industria y Comercio.</li>
+          <li>Revocar la autorización o solicitar la supresión de los datos.</li>
+          <li>Acceder gratuitamente a sus datos personales.</li>
+        </ul>
+
+        <h2 id="canales">4. Procedimiento y canales de atención</h2>
+        <p>Puedes ejercer tus derechos por estos canales:</p>
+        <ul>
+          <li>Correo electrónico: <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></li>
+          <li>Dirección física en Bogotá D.C. (ver la política completa).</li>
+          <li>Este sitio web y las redes sociales oficiales de la compañía.</li>
+        </ul>
+        <p>Las consultas se atienden en un máximo de 15 días hábiles. Los reclamos, en 15 días hábiles prorrogables por 8 días hábiles adicionales.</p>
+
+        <h2 id="vigencia">5. Vigencia</h2>
+        <p>
+          La autorización se mantiene vigente durante la relación contractual y hasta seis meses después de terminada,
+          salvo que el titular la revoque. La versión completa está disponible en PDF o puede solicitarse por correo.
+        </p>
+      </article>
+    </div>
+  </section>
+</Layout>
