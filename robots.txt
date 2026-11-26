@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://gitjac19.github.io/sitemap-index.xml
